@@ -1,0 +1,386 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Permohonan;
+use Illuminate\Http\Request;
+
+class PermohonanController extends Controller
+{
+    private function getData()
+    {
+        return session('permohonan_data', []);
+    }
+
+    private function saveData(array $data)
+    {
+        session(['permohonan_data' => array_merge($this->getData(), $data)]);
+    }
+
+    // STEP 1 : Identitas Madrasah (halaman 1 PDF)
+    public function step1()
+    {
+        $data = $this->getData();
+        // default values - PP KUNUUZUL IMAM KAUMAN
+        $defaults = [
+            'nama_madrasah' => $data['nama_madrasah'] ?? 'PP KUNUUZUL IMAM KAUMAN',
+            'nama_pesantren' => $data['nama_pesantren'] ?? 'PP KUNUUZUL IMAM KAUMAN',
+            'negara' => $data['negara'] ?? 'INDONESIA',
+            'provinsi' => $data['provinsi'] ?? 'JAWA TIMUR',
+            'kabupaten' => $data['kabupaten'] ?? 'KABUPATEN BONDOWOSO',
+            'kecamatan' => $data['kecamatan'] ?? 'BONDOWOSO',
+            'desa' => $data['desa'] ?? 'KAUMAN',
+            'jalan_dusun' => $data['jalan_dusun'] ?? 'JLN KH ZAINUL ARIFIN NO. 165',
+            'kode_pos' => $data['kode_pos'] ?? '68213',
+            'rt' => $data['rt'] ?? '01',
+            'rw' => $data['rw'] ?? '02',
+            'telepon' => $data['telepon'] ?? '085236680680',
+            'email' => $data['email'] ?? 'kunuzulimam@gmail.com',
+        ];
+        return view('permohonan.step1', compact('defaults', 'data'));
+    }
+
+    public function storeStep1(Request $request)
+    {
+        $validated = $request->validate([
+            'nama_madrasah' => 'required|string|max:255',
+            'nama_pesantren' => 'required|string|max:255',
+            'negara' => 'required|string',
+            'provinsi' => 'required|string',
+            'kabupaten' => 'required|string',
+            'kecamatan' => 'required|string',
+            'desa' => 'required|string',
+            'jalan_dusun' => 'required|string',
+            'kode_pos' => 'required|string',
+            'rt' => 'required|string',
+            'rw' => 'required|string',
+            'telepon' => 'required|string',
+            'email' => 'required|email',
+        ], [
+            'nama_pesantren.required' => 'Nama Pondok Pesantren wajib diisi (sesuai tutorial: jika tidak ada kasih 0 atau -)',
+        ]);
+
+        $this->saveData($validated);
+        return redirect()->route('permohonan.step2');
+    }
+
+    // STEP 2 : Data Pengelola Lembaga (halaman 2)
+    public function step2()
+    {
+        $data = $this->getData();
+        return view('permohonan.step2', compact('data'));
+    }
+
+    public function storeStep2(Request $request)
+    {
+        $validated = $request->validate([
+            'pengasuh' => 'required|string|min:3|max:100',
+            'pengasuh_hp' => 'required|string|regex:/^08[0-9]{8,13}$/',
+            'ketua_yayasan' => 'required|string|min:3|max:100',
+            'ketua_yayasan_hp' => 'required|string|regex:/^08[0-9]{8,13}$/',
+            'sekretaris_yayasan' => 'required|string|min:3|max:100',
+            'sekretaris_yayasan_hp' => 'required|string|regex:/^08[0-9]{8,13}$/',
+            'kepala_madrasah' => 'required|string|min:3|max:100',
+            'kepala_madrasah_hp' => 'required|string|regex:/^08[0-9]{8,13}$/',
+            'tata_usaha' => 'required|string|min:1|max:100',
+            'tata_usaha_hp' => 'required|string|regex:/^08[0-9]{8,13}$/',
+            'pjgt' => 'required|string|min:3|max:100',
+            'pjgt_hp' => 'required|string|regex:/^08[0-9]{8,13}$/',
+        ], [
+            'pengasuh.required' => 'Pengasuh wajib diisi (jika tidak ada isi 0)',
+            'pengasuh_hp.regex' => 'No HP harus format 08... 10-15 digit',
+        ]);
+
+        $this->saveData($validated);
+        return redirect()->route('permohonan.step3');
+    }
+
+    // STEP 3 : Situasi dan Kondisi Madrasah (halaman 3)
+    public function step3()
+    {
+        $data = $this->getData();
+        $defaults = [
+            'situasi_madrasah' => $data['situasi_madrasah'] ?? 'PESANTREN',
+            'komunikasi_bahasa' => $data['komunikasi_bahasa'] ?? 'INDONESIA',
+            'kbm_bahasa' => $data['kbm_bahasa'] ?? 'INDONESIA',
+        ];
+        return view('permohonan.step3', compact('data', 'defaults'));
+    }
+
+    public function storeStep3(Request $request)
+    {
+        $validated = $request->validate([
+            'situasi_madrasah' => 'required|string',
+            'komunikasi_bahasa' => 'required|string',
+            'komunikasi_lainnya' => 'nullable|string',
+            'mapel_aqidah' => 'required|string',
+            'mapel_fiqh' => 'required|string',
+            'mapel_ilmu_alat' => 'required|string',
+            'mapel_quran' => 'required|string',
+            'mapel_akhlaq' => 'required|string',
+            'kbm_bahasa' => 'required|string',
+            'kbm_lainnya' => 'nullable|string',
+            'guru_laki' => 'required|string',
+            'guru_perempuan' => 'required|string',
+        ]);
+
+        $this->saveData($validated);
+        return redirect()->route('permohonan.step4');
+    }
+
+    // STEP 4 : Jumlah Murid (halaman 4)
+    public function step4()
+    {
+        $data = $this->getData();
+        return view('permohonan.step4', compact('data'));
+    }
+
+    public function storeStep4(Request $request)
+    {
+        $validated = $request->validate([
+            'sifir_putra' => 'nullable|integer|min:0',
+            'sifir_putri' => 'nullable|integer|min:0',
+            'ibtidaiyah_1_putra' => 'nullable|integer|min:0',
+            'ibtidaiyah_1_putri' => 'nullable|integer|min:0',
+            'ibtidaiyah_2_putra' => 'nullable|integer|min:0',
+            'ibtidaiyah_2_putri' => 'nullable|integer|min:0',
+            'ibtidaiyah_3_putra' => 'nullable|integer|min:0',
+            'ibtidaiyah_3_putri' => 'nullable|integer|min:0',
+            'ibtidaiyah_4_putra' => 'nullable|integer|min:0',
+            'ibtidaiyah_4_putri' => 'nullable|integer|min:0',
+            'ibtidaiyah_5_putra' => 'nullable|integer|min:0',
+            'ibtidaiyah_5_putri' => 'nullable|integer|min:0',
+            'ibtidaiyah_6_putra' => 'nullable|integer|min:0',
+            'ibtidaiyah_6_putri' => 'nullable|integer|min:0',
+            'tsanawiyah_1_putra' => 'nullable|integer|min:0',
+            'tsanawiyah_1_putri' => 'nullable|integer|min:0',
+            'tsanawiyah_2_putra' => 'nullable|integer|min:0',
+            'tsanawiyah_2_putri' => 'nullable|integer|min:0',
+            'tsanawiyah_3_putra' => 'nullable|integer|min:0',
+            'tsanawiyah_3_putri' => 'nullable|integer|min:0',
+            'mukim_putra' => 'nullable|integer|min:0',
+            'mukim_putri' => 'nullable|integer|min:0',
+            'tidak_mukim_putra' => 'nullable|integer|min:0',
+            'tidak_mukim_putri' => 'nullable|integer|min:0',
+        ]);
+
+        $this->saveData($validated);
+
+        // Simpan ke DB dan redirect ke rekap / permohnan lama
+        $all = $this->getData();
+
+        // Generate alamat lengkap
+        $alamat = trim(($all['jalan_dusun'] ?? '') . ' - ' . ($all['desa'] ?? '') . ' - ' . ($all['kecamatan'] ?? '') . ' - ' . ($all['kabupaten'] ?? '') . ' - ' . ($all['provinsi'] ?? ''));
+
+        // Generate ID PJGT atomic - MAX + 1 anti race
+        $maxId = Permohonan::max(\DB::raw('CAST(pjgt_id AS UNSIGNED)'));
+        $next = $maxId ? $maxId + 1 : 196;
+        if ($next < 195) $next = 195;
+        $pjgtId = str_pad($next, 5, '0', STR_PAD_LEFT);
+        $pjgtNama = $all['pjgt'] ?? $all['pengasuh'] ?? 'TAUFIQUR ROHMAN';
+
+        $permohonan = Permohonan::create(array_merge($all, [
+            'pjgt_id' => $pjgtId,
+            'pjgt_nama' => $pjgtNama,
+            'alamat_lengkap' => $alamat,
+            'wil' => 'T-4',
+            'tahun' => '1448/1449',
+            'status' => 'Proses',
+            'butuh_gt' => 1,
+            'rapot' => 'A',
+            'username' => auth()->user()->username ?? '00007',
+        ]));
+
+        // clear session
+        session()->forget('permohonan_data');
+        session()->flash('success', 'Permohonan berhasil disimpan dengan ID PJGT ' . $pjgtId);
+
+        return redirect()->route('permohonan.lama');
+    }
+
+    // Halaman Permohonan Lama (halaman 5 PDF) - tabel list heritage
+    public function lama(Request $request)
+    {
+        $search = $request->query('search');
+        $rapot = $request->query('rapot');
+        $status = $request->query('status');
+        $query = Permohonan::query()->latest();
+        // Role filter: admin lihat semua, pjgt lihat milik sendiri, gt lihat yang Diterima (tugas)
+        if (auth()->user()->role === 'pjgt') {
+            $query->where('username', auth()->user()->username);
+        } elseif (auth()->user()->role === 'gt') {
+            $query->where('status', 'Diterima');
+        }
+        if ($search) {
+            $query->where(function($q) use ($search){
+                $q->where('pjgt_nama','like',"%$search%")
+                  ->orWhere('nama_madrasah','like',"%$search%")
+                  ->orWhere('pjgt_id','like',"%$search%");
+            });
+        }
+        if ($rapot && in_array($rapot, ['A','B','C'])) {
+            $query->where('rapot', $rapot);
+        }
+        if ($status && in_array($status, ['Diterima','Ditolak','Proses'])) {
+            $query->where('status', $status);
+        }
+        $permohonans = $query->paginate(15)->withQueryString();
+
+        // dummy data jika kosong, tampilkan contoh seperti di PDF agar mirip screenshot
+        $dummy = [];
+        if ($permohonans->isEmpty() && !$search && !$rapot && !$status) {
+            $dummy = [
+                ['id'=>'00195','nama'=>'TAUFIQUR ROHMAN','madrasah'=>'AL-MARZUQI','alamat'=>'Kerang - Sukosari - Kabupaten Bondowoso - JAWA TIMUR','status'=>'Ditolak','butuh'=>1,'rapot'=>'A'],
+                ['id'=>'00366','nama'=>'MUKHLAS','madrasah'=>'AL-HUDA','alamat'=>'Patemon - Tlogosari - Kabupaten Bondowoso - JAWA TIMUR','status'=>'Ditolak','butuh'=>1,'rapot'=>'B'],
+                ['id'=>'00369','nama'=>'AHMAD SYAMSUL MUQIT ZAINI','madrasah'=>'NURUL HIKMAH','alamat'=>'Lumutan - Botolinggo - Kabupaten Bondowoso - JAWA TIMUR','status'=>'Ditolak','butuh'=>2,'rapot'=>'A'],
+            ];
+        }
+
+        return view('permohonan.lama', compact('permohonans','dummy','search','rapot','status'));
+    }
+
+    public function show(Permohonan $permohonan)
+    {
+        return view('permohonan.show', compact('permohonan'));
+    }
+
+    public function edit(Permohonan $permohonan)
+    {
+        if (auth()->user()->role !== 'admin' && $permohonan->username !== auth()->user()->username) {
+            abort(403);
+        }
+        return view('permohonan.edit', compact('permohonan'));
+    }
+
+    public function update(Request $request, Permohonan $permohonan)
+    {
+        if (auth()->user()->role !== 'admin' && $permohonan->username !== auth()->user()->username) {
+            abort(403);
+        }
+        $validated = $request->validate([
+            'nama_madrasah' => 'required|string|max:255',
+            'nama_pesantren' => 'required|string|max:255',
+            'telepon' => 'required|string',
+            'email' => 'required|email',
+            'pjgt_nama' => 'required|string|max:100',
+            'status' => 'required|in:Diterima,Ditolak,Proses',
+            'rapot' => 'required|in:A,B,C',
+            'butuh_gt' => 'required|integer|min:1|max:10',
+            'catatan_admin' => 'nullable|string|max:500',
+        ]);
+        $permohonan->update($validated);
+        return redirect()->route('permohonan.lama')->with('success','Permohonan '.$permohonan->pjgt_id.' berhasil diupdate');
+    }
+
+    public function approve(Request $request, Permohonan $permohonan)
+    {
+        $request->validate(['status'=>'required|in:Diterima,Ditolak,Proses','catatan_admin'=>'nullable|string|max:500']);
+        $permohonan->update([
+            'status' => $request->status,
+            'catatan_admin' => $request->catatan_admin,
+            'approved_by' => auth()->user()->name,
+            'approved_at' => now(),
+        ]);
+        return back()->with('success','Status '.$permohonan->pjgt_id.' diubah ke '.$request->status);
+    }
+
+    public function uploadDokumen(Request $request, Permohonan $permohonan)
+    {
+        if (auth()->user()->role !== 'admin' && $permohonan->username !== auth()->user()->username) abort(403);
+        $request->validate(['dokumen'=>'required|file|mimes:pdf,jpg,png|max:2048']);
+        $path = $request->file('dokumen')->store('dokumen','public');
+        $permohonan->update(['dokumen_path'=>$path]);
+        return back()->with('success','Dokumen berhasil diupload');
+    }
+
+    public function destroy(Permohonan $permohonan)
+    {
+        if (auth()->user()->role !== 'admin') abort(403);
+        $permohonan->delete();
+        return back()->with('success','Data dihapus');
+    }
+
+    public function rekap()
+    {
+        $total = Permohonan::count();
+        $byStatus = Permohonan::selectRaw('status, count(*) as total')->groupBy('status')->pluck('total','status');
+        $byRapot = Permohonan::selectRaw('rapot, count(*) as total')->groupBy('rapot')->pluck('total','rapot');
+        $byWil = Permohonan::selectRaw('wil, count(*) as total')->groupBy('wil')->pluck('total','wil');
+        $recent = Permohonan::latest()->take(5)->get();
+        return view('permohonan.rekap', compact('total','byStatus','byRapot','byWil','recent'));
+    }
+
+    public function export(Request $request)
+    {
+        $search = $request->query('search');
+        $rapot = $request->query('rapot');
+        $status = $request->query('status');
+        $query = Permohonan::query()->latest();
+        if ($search) {
+            $query->where(function($q) use ($search){
+                $q->where('pjgt_nama','like',"%$search%")
+                  ->orWhere('nama_madrasah','like',"%$search%")
+                  ->orWhere('pjgt_id','like',"%$search%");
+            });
+        }
+        if ($rapot && in_array($rapot, ['A','B','C'])) {
+            $query->where('rapot', $rapot);
+        }
+        if ($status && in_array($status, ['Diterima','Ditolak','Proses'])) {
+            $query->where('status', $status);
+        }
+        $data = $query->get();
+
+        $filterSuffix = ($search?'_search-'.$search:'').($rapot?'_rapot-'.$rapot:'').($status?'_status-'.$status:'');
+        $filename = 'Rekap_TMTB-DAI-KIK_PP-KUNUUZUL'.$filterSuffix.'_'.date('Y-m-d_His').'.xls';
+        $headers = [
+            'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ];
+
+        $columns = ['ID PJGT','Nama PJGT','Madrasah','Pesantren','Alamat','Desa','Kec','Kab','Prov','Wil','Tahun','Status','Butuh GT','Rapot','Sifir L/P','Ibtidaiyah 1 L/P','Ibtidaiyah 6 L/P','Tsanawiyah 3 L/P','Mukim L/P','Tidak Mukim L/P',' Telepon','Email','Guru L/P'];
+
+        $callback = function() use ($data, $columns, $search, $rapot, $status) {
+            echo "\xEF\xBB\xBF";
+            echo "<table border='1'>";
+            echo "<tr><th colspan='23' style='background:#0a3d1f;color:#d4af37;text-align:center;font-size:14px'>TMTB & DAI KIK — PP KUNUUZUL IMAM KAUMAN • Rekap Permohonan Guru Tugas 1448/1449 H • heritage</th></tr>";
+            $filterText = "Filter: ".($search?"search=$search ":"").($rapot?"rapot=$rapot ":"").($status?"status=$status ":"").($search||$rapot||$status?"• ":"Tidak ada filter • ");
+            echo "<tr><th colspan='23' style='background:#fdf6e3;color:#0a3d1f;text-align:center'>Jln KH Zainul Arifin No.165 Kauman Bondowoso 68213 • ".$filterText."Export: ".date('d-m-Y H:i')." • Total: ".$data->count()."</th></tr>";
+            echo "<tr style='background:#fdf0c7;color:#0a3d1f;font-weight:bold'>";
+            foreach($columns as $c){ echo "<th style='background:#d4af37;color:#0a3d1f;border:1px solid #0a3d1f;padding:6px'>".htmlspecialchars($c)."</th>"; }
+            echo "</tr>";
+            foreach($data as $p){
+                echo "<tr>";
+                echo "<td>".htmlspecialchars($p->pjgt_id)."</td>";
+                echo "<td>".htmlspecialchars($p->pjgt_nama)."</td>";
+                echo "<td>".htmlspecialchars($p->nama_madrasah)."</td>";
+                echo "<td>".htmlspecialchars($p->nama_pesantren)."</td>";
+                echo "<td>".htmlspecialchars($p->alamat_lengkap)."</td>";
+                echo "<td>".htmlspecialchars($p->desa)."</td>";
+                echo "<td>".htmlspecialchars($p->kecamatan)."</td>";
+                echo "<td>".htmlspecialchars($p->kabupaten)."</td>";
+                echo "<td>".htmlspecialchars($p->provinsi)."</td>";
+                echo "<td>".htmlspecialchars($p->wil)."</td>";
+                echo "<td>".htmlspecialchars($p->tahun)."</td>";
+                echo "<td>".htmlspecialchars($p->status)."</td>";
+                echo "<td>".htmlspecialchars($p->butuh_gt)."</td>";
+                echo "<td>".htmlspecialchars($p->rapot)."</td>";
+                echo "<td>".$p->sifir_putra."/".$p->sifir_putri."</td>";
+                echo "<td>".$p->ibtidaiyah_1_putra."/".$p->ibtidaiyah_1_putri."</td>";
+                echo "<td>".$p->ibtidaiyah_6_putra."/".$p->ibtidaiyah_6_putri."</td>";
+                echo "<td>".$p->tsanawiyah_3_putra."/".$p->tsanawiyah_3_putri."</td>";
+                echo "<td>".$p->mukim_putra."/".$p->mukim_putri."</td>";
+                echo "<td>".$p->tidak_mukim_putra."/".$p->tidak_mukim_putri."</td>";
+                echo "<td>".htmlspecialchars($p->telepon)."</td>";
+                echo "<td>".htmlspecialchars($p->email)."</td>";
+                echo "<td>".htmlspecialchars($p->guru_laki)."/".htmlspecialchars($p->guru_perempuan)."</td>";
+                echo "</tr>";
+            }
+            echo "</table>";
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+}

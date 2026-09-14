@@ -1,0 +1,390 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0a3d1f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>@yield('title', 'TMTB & DAI KIK - PP KUNUUZUL IMAM KAUMAN')</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--green:#0a3d1f;--gold:#d4af37;--gold2:#b8941f;--cream:#fdf6e3;--cream2:#fdf0c7;--brown:#5d4037}
+        *{ -webkit-tap-highlight-color:transparent }
+        html{scroll-behavior:smooth}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:#1a1a1a;overflow-x:hidden;-webkit-font-smoothing:antialiased;position:relative}
+        body::before{content:'';position:fixed;inset:0;background-image:url("{{ asset('images/madin.png') }}");background-size:180px;background-repeat:repeat;opacity:.025;pointer-events:none;z-index:0}
+        .arab{font-family:'Amiri',serif}
+        /* Sidebar world-class */
+        .sidebar{width:260px;min-height:100vh;min-height:100dvh;background:linear-gradient(180deg,#0a3d1f 0%, #0e4d26 40%, #0a3d1f 100%);position:fixed;left:0;top:0;bottom:0;overflow-y:auto;border-right:3px solid var(--gold);box-shadow:4px 0 28px rgba(0,0,0,0.18);z-index:1050;transition:transform .32s cubic-bezier(.4,0,.2,1);overscroll-behavior:contain}
+        .sidebar::-webkit-scrollbar{width:6px}
+        .sidebar::-webkit-scrollbar-thumb{background:rgba(212,175,55,0.35);border-radius:10px}
+        .sidebar .brand{background:linear-gradient(135deg,var(--cream) 0%, #fff 60%, var(--cream2) 100%);padding:12px 14px;border-bottom:3px solid var(--gold);display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:2;cursor:pointer;transition:background .3s}
+        .sidebar .brand:hover{background:linear-gradient(135deg,#fff 0%, var(--cream) 100%)}
+        .sidebar .brand::after{content:'◆';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);background:var(--cream);color:var(--gold);padding:0 6px;font-size:12px}
+        .sidebar .menu a{display:flex;align-items:center;gap:10px;padding:11px 16px;color:var(--cream);text-decoration:none;font-size:13.5px;margin:3px 10px;border-radius:10px;border:1px solid transparent;transition:.15s;min-height:44px}
+        .sidebar .menu a.active{background:var(--gold);color:var(--green);font-weight:700;border-color:var(--cream);box-shadow:0 2px 8px rgba(212,175,55,0.3)}
+        .sidebar .menu a:hover{background:rgba(212,175,55,0.15);color:var(--gold);border-color:var(--gold)}
+        .sidebar .menu a:active{transform:scale(0.97)}
+        .sidebar .menu .submenu{margin-left:18px;font-size:12.5px;border-left:1px dashed rgba(212,175,55,0.4);padding-left:8px}
+        .sidebar .menu .submenu a{margin:2px 6px;padding:8px 10px;min-height:40px}
+        .sidebar-close{display:none;width:36px;height:36px;border:2px solid var(--gold);background:rgba(255,255,255,0.08);color:var(--gold);border-radius:10px;align-items:center;justify-content:center;flex-shrink:0}
+        .main{margin-left:260px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;transition:margin .32s}
+        .topbar{background:rgba(255,255,255,0.88);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border-bottom:2px solid var(--gold);padding:10px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1020;box-shadow:0 4px 20px rgba(10,61,31,0.08);padding-top:calc(10px + env(safe-area-inset-top));gap:10px}
+        .topbar .breadcrumb{margin:0;background:transparent;padding:0;font-size:13px}
+        .content{padding:22px;flex:1;position:relative;z-index:1}
+        .card-form{background:#fff;border:2px solid var(--gold);border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(10,61,31,0.08);transition:transform .2s, box-shadow .2s}
+        .card-form:hover{box-shadow:0 10px 36px rgba(10,61,31,0.12)}
+        .card-form-header{padding:14px 20px;border-bottom:2px solid var(--gold);background:linear-gradient(135deg,var(--cream) 0%, #f7e8b5 100%);color:var(--green);font-weight:700}
+        .stepper{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;background:#fff;border-bottom:1px solid #e8d9a0;gap:4px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+        .stepper::-webkit-scrollbar{display:none}
+        .step{text-align:center;flex:1;min-width:68px;position:relative;scroll-snap-align:start}
+        .step .circle{width:42px;height:42px;border-radius:10px;background:#f5f0d0;color:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:18px;border:2px solid #e8d9a0;font-weight:700;transition:.2s}
+        .step.active .circle{background:var(--green);color:var(--gold);border-color:var(--gold);box-shadow:0 3px 10px rgba(10,61,31,0.2);transform:scale(1.06)}
+        .step.done .circle{background:var(--green);color:var(--gold);border-color:var(--gold)}
+        .step label{font-size:11px;color:#8a7a3a;font-weight:600;white-space:nowrap}
+        .step.active label,.step.done label{color:var(--green);font-weight:800}
+        .step .line{position:absolute;top:21px;left:62%;right:-38%;height:2.5px;background:#e8d9a0;border-radius:10px}
+        .step.done .line,.step.active .line{background:var(--gold)}
+        .step:last-child .line{display:none}
+        .form-control,.form-select{border-radius:10px;font-size:15px;padding:10px 12px;border:1.5px solid #e8d9a0;min-height:44px}
+        .form-control:focus,.form-select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,0.18)}
+        .form-control.required{border-color:var(--gold);background:#fffdf0}
+        .form-label{font-weight:600;color:var(--green);margin-bottom:4px;font-size:13px}
+        .btn-green{background:var(--green);color:var(--gold);border:2px solid var(--gold);padding:10px 20px;border-radius:50px;font-weight:700;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:.18s}
+        .btn-green:hover{background:#082f18;color:var(--gold);transform:translateY(-1px)}
+        .btn-green:active{transform:scale(0.96)}
+        .btn-yellow{background:var(--gold);color:var(--green);border:2px solid var(--green);padding:10px 20px;border-radius:50px;font-weight:700;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:.18s}
+        .btn-yellow:hover{background:#b8941f;color:var(--green)}
+        .btn-yellow:active{transform:scale(0.96)}
+        .username-badge{border:2px solid var(--gold);color:var(--green);background:var(--cream);padding:4px 10px;border-radius:50px;font-size:12px;font-weight:700;white-space:nowrap}
+        .footer{background:var(--green);color:var(--cream);border-top:3px solid var(--gold);padding:12px 20px;font-size:11px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+        .footer a{color:var(--gold);text-decoration:none}
+        .badge-pendaftaran{background:var(--green);color:var(--gold);border:1px solid var(--gold);padding:3px 8px;border-radius:50px;font-size:10px;font-weight:700}
+        .kitab-badge{background:var(--green);color:var(--gold);border:1px solid var(--gold);padding:3px 8px;border-radius:50px;font-size:10px;font-weight:700}
+        /* Mobile overlay */
+        .sidebar-overlay{position:fixed;inset:0;background:rgba(10,61,31,0.45);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:1045;opacity:0;pointer-events:none;transition:opacity .32s}
+        .sidebar-overlay.show{opacity:1;pointer-events:auto}
+        /* Bottom Nav — mobile only */
+        .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:1046;background:rgba(255,255,255,0.97);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border-top:2.5px solid var(--gold);display:none;grid-template-columns:repeat(5,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px rgba(10,61,31,0.14)}
+        .bottom-nav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px;border-radius:12px;text-decoration:none;color:var(--brown);font-size:10px;font-weight:700;transition:.16s;min-height:48px;position:relative}
+        .bottom-nav a i{font-size:20px;line-height:1;transition:.16s}
+        .bottom-nav a.active{background:var(--green);color:var(--gold);border:1.5px solid var(--gold);box-shadow:0 4px 14px rgba(10,61,31,0.18)}
+        .bottom-nav a.active i{color:var(--gold)}
+        .bottom-nav a:active{transform:scale(0.93)}
+        /* Mobile masterpiece breakpoints */
+        @media(max-width:991px){
+            .sidebar{transform:translateX(-100%);width:300px;max-width:84vw;box-shadow:8px 0 40px rgba(0,0,0,0.22)}
+            .sidebar.mobile-open{transform:translateX(0)}
+            .sidebar-close{display:flex}
+            .main{margin-left:0}
+            .content{padding:14px 14px 84px}
+            .topbar{padding-left:14px;padding-right:14px}
+            .bottom-nav{display:grid}
+            .footer{margin-bottom:0;font-size:10.5px}
+            .card-form{border-radius:14px}
+        }
+        @media(max-width:576px){
+            .content{padding:12px 12px 86px}
+            .topbar .breadcrumb{font-size:12px}
+            .card-form-header{padding:12px 14px;font-size:14px}
+            .stepper{padding:12px 8px 10px;gap:2px}
+            .step{min-width:62px}
+            .step .circle{width:38px;height:38px;font-size:16px}
+            .step label{font-size:9.5px}
+            .form-control,.form-select{font-size:16px} /* prevent iOS zoom */
+            .btn-green,.btn-yellow{padding:11px 16px;font-size:14px;width:100%}
+            .p-3.border-top.d-flex{flex-wrap:wrap;gap:10px}
+            .p-3.border-top.d-flex .btn-green,.p-3.border-top.d-flex .btn-yellow{flex:1;min-width:120px}
+            /* tables -> allow horizontal swipe hint */
+            .table-responsive{position:relative}
+            .table-responsive::after{content:'‹ geser ›';position:absolute;right:8px;top:6px;background:var(--cream2);border:1px solid var(--gold);color:var(--brown);font-size:9px;padding:2px 6px;border-radius:20px;opacity:0.85;pointer-events:none}
+        }
+        @media(max-width:375px){
+            .sidebar{width:86vw}
+            .content{padding:10px 10px 18px}
+        }
+        /* interactive extras */
+        .ripple{position:absolute;border-radius:50%;transform:scale(0);animation:ripple .55s ease-out;background:rgba(212,175,55,0.38);pointer-events:none}
+        @keyframes ripple{to{transform:scale(4);opacity:0}}
+        .toast-wrap{position:fixed;right:16px;bottom:84px;z-index:1080;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+        .toast-item{background:var(--green);color:var(--cream);border:1.5px solid var(--gold);padding:12px 16px;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,0.18);font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;min-width:260px;max-width:360px;animation:slideIn .35s cubic-bezier(.22,1,.36,1);pointer-events:auto}
+        .toast-item.success{border-color:#22c55e}
+        .toast-item.error{background:#7a0a0a;border-color:#ffb3b3;color:#fff}
+        @keyframes slideIn{from{opacity:0;transform:translateX(20px) translateY(8px)} to{opacity:1;transform:none}}
+        .sidebar-search{margin:0 10px 8px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(212,175,55,0.35);border-radius:10px;overflow:hidden;display:flex;align-items:center}
+        .sidebar-search input{background:transparent;border:none;color:var(--cream);padding:8px 10px;font-size:12.5px;flex:1;outline:none;min-height:36px}
+        .sidebar-search input::placeholder{color:rgba(253,246,227,0.6)}
+        .sidebar-search i{color:var(--gold);padding:0 8px;font-size:13px}
+        .menu a.hidden-search{display:none !important}
+        /* bottom nav sits flush above footer — no extra cream gap */
+        @media(max-width:991px){ .main{padding-bottom:0} }
+    </style>
+    @stack('styles')
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="sidebar" id="sidebar">
+    <div class="brand">
+        <div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><img src="{{ asset('images/madin.png') }}" alt="Logo" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.2))"></div>
+        <div style="line-height:1.1;flex:1"><strong style="font-size:13px;color:var(--green)">TMTB & DAI <span style="color:#b8941f">KIK</span></strong><br><span class="arab" style="font-size:10px;color:#5d4037">PP KUNUUZUL IMAM KAUMAN</span></div>
+        <button class="sidebar-close" onclick="closeSidebar()" aria-label="Tutup menu"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="text-center py-2 arab small" style="color:var(--gold);background:rgba(0,0,0,0.15);font-size:11px">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+    <div class="sidebar-search"><i class="bi bi-search"></i><input id="sidebarSearch" type="text" placeholder="Cari menu... ( / )" autocomplete="off"><span class="small" style="color:rgba(253,246,227,0.5);padding-right:8px;font-size:10px">⌘K</span></div>
+    <div class="menu mt-2">
+        <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard*') ? 'active':'' }}"><i class="bi bi-house-door-fill"></i> Dashboard</a>
+        <a href="#" data-bs-toggle="collapse" data-bs-target="#permohonanMenu" style="justify-content:space-between;" onclick="event.preventDefault(); document.getElementById('permohonanMenu').classList.toggle('show')">
+            <span><i class="bi bi-journal-bookmark-fill"></i> Permohonan</span> <i class="bi bi-chevron-down" style="font-size:10px;transition:.2s" id="permohonanChevron"></i>
+        </a>
+        <div id="permohonanMenu" class="collapse show">
+            @if(in_array(auth()->user()->role ?? '', ['admin','pjgt']))
+            <a href="{{ route('permohonan.step1') }}" class="{{ request()->routeIs('permohonan.step*') ? 'active':'' }} submenu"><i class="bi bi-feather"></i> Form Permohonan</a>
+            @endif
+            <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama') ? 'active':'' }} submenu"><i class="bi bi-collection-fill"></i> Permohonan Lama</a>
+            <a href="{{ route('permohonan.rekap') }}" class="{{ request()->routeIs('permohonan.rekap') ? 'active':'' }} submenu"><i class="bi bi-bar-chart-fill"></i> Rekap</a>
+        </div>
+        <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama') ? 'active':'' }}"><i class="bi bi-journals"></i> Data Permohonan</a>
+        @if((auth()->user()->role ?? '')==='admin')
+        <a href="{{ route('permohonan.rekap') }}"><i class="bi bi-graph-up"></i> Rekap</a>
+        <a href="#"><i class="bi bi-megaphone-fill"></i> Laporan <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
+        <a href="#"><i class="bi bi-calendar-event"></i> Rapat <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
+        <a href="#"><i class="bi bi-mosque"></i> Supervisi <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
+        @else
+        <a href="#" style="opacity:0.7"><i class="bi bi-mortarboard"></i> Guru Tugas</a>
+        @endif
+        <div class="mt-3 mx-3 p-3 rounded-3 small" style="background:var(--cream);border:2px solid var(--gold);">
+            <div class="fw-bold" style="color:var(--green)"><i class="bi bi-person-badge" style="color:var(--gold)"></i> {{ auth()->user()->name }}</div>
+            <div style="font-size:11px;color:#5d4037;word-break:break-all">{{ auth()->user()->username }} • <span class="badge-pendaftaran">{{ strtoupper(auth()->user()->role ?? '-') }}</span></div>
+            <div class="small arab text-center mt-1" style="color:var(--gold);font-size:10px">بارك الله فيكم</div>
+            <form method="POST" action="{{ route('logout') }}" class="mt-2">@csrf<button class="btn btn-outline-danger btn-sm w-100 rounded-pill" style="border-color:var(--gold);color:var(--green);font-weight:700;min-height:40px"><i class="bi bi-box-arrow-right"></i> Keluar</button></form>
+        </div>
+        <div class="text-center mt-3 small arab" style="color:var(--gold);opacity:0.6;font-size:10px">العلم نور</div>
+        <div style="height:16px"></div>
+    </div>
+</div>
+
+<div class="main">
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <button class="btn btn-sm" style="border:2px solid var(--gold);background:var(--cream2);color:var(--green);width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;flex-shrink:0" onclick="toggleSidebar()" aria-label="Menu">
+                <i class="bi bi-list" style="font-size:18px"></i>
+            </button>
+            <nav aria-label="breadcrumb" class="d-none d-sm-block">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}" class="text-decoration-none" style="color:var(--green)"><i class="bi bi-house"></i> Home</a></li>
+                    <li class="breadcrumb-item active" style="color:var(--gold);font-weight:700;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">@yield('breadcrumb', 'Form Permohonan')</li>
+                </ol>
+            </nav>
+            <span class="d-sm-none small fw-bold" style="color:var(--green);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">@yield('breadcrumb', 'Form')</span>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <span class="badge-pendaftaran d-none d-md-inline">1448/1449 H</span>
+            <a href="{{ route('landing') }}" class="small text-decoration-none d-none d-md-inline" style="color:var(--green);font-weight:700"><i class="bi bi-house"></i> Beranda</a>
+            <div class="dropdown d-flex align-items-center gap-2">
+                <a href="#" data-bs-toggle="dropdown" class="d-flex align-items-center gap-2 text-decoration-none" style="min-height:40px">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=0a3d1f&color=d4af37&size=80" class="rounded-circle" width="34" height="34" style="border:2px solid var(--gold);object-fit:cover">
+                    <span class="small d-none d-lg-inline" style="color:var(--green);font-weight:700;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ auth()->user()->name ?? 'Guest' }} <span class="badge-pendaftaran ms-1">{{ strtoupper(auth()->user()->role ?? '-') }}</span></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" style="border:2px solid var(--gold);border-radius:14px;overflow:hidden;min-width:220px">
+                    <li><span class="dropdown-item small" style="color:var(--green);white-space:normal;word-break:break-all">{{ auth()->user()->email ?? '' }}<br><span class="text-muted" style="font-size:11px">{{ auth()->user()->username ?? '' }} • {{ strtoupper(auth()->user()->role ?? '') }}</span></span></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item small" href="{{ route('landing') }}" style="color:var(--green)"><i class="bi bi-house"></i> Beranda Landing</a></li>
+                    <li><form method="POST" action="{{ route('logout') }}">@csrf<button class="dropdown-item small" style="color:#dc3545"><i class="bi bi-box-arrow-right"></i> Keluar</button></form></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        @if(session('success'))
+            <div class="alert alert-dismissible fade show" style="background:var(--cream2);border:2px solid var(--gold);color:var(--green);border-radius:12px"><i class="bi bi-check-circle-fill" style="color:var(--gold)"></i> {{ session('success') }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+        @endif
+        @if($errors->any())
+            <div class="alert" style="background:#ffe9e9;border:2px solid #ffb3b3;color:#7a0a0a;border-radius:12px"><i class="bi bi-exclamation-triangle-fill"></i> {{ $errors->first() }}</div>
+        @endif
+        @yield('content')
+    </div>
+
+    <div class="footer">
+        <span class="arab">© 1448 TMTB & DAI KIK • PP KUNUUZUL IMAM KAUMAN • Kauman 68213</span>
+        <span class="d-none d-md-inline small" style="color:var(--gold)">بارك الله • Heritage Kuning</span>
+        <span class="d-md-none small" style="color:var(--gold);opacity:0.85">Heritage • 1448H</span>
+    </div>
+</div>
+
+<div id="toastWrap" class="toast-wrap"></div>
+<!-- Bottom Nav — Mobile Masterpiece -->
+<nav class="bottom-nav" aria-label="Navigasi bawah">
+    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard*') ? 'active':'' }}">
+        <i class="bi {{ request()->routeIs('dashboard*') ? 'bi-house-door-fill' : 'bi-house-door' }}"></i>
+        <span>Home</span>
+    </a>
+    <a href="{{ route('permohonan.step1') }}" class="{{ request()->routeIs('permohonan.step*') ? 'active':'' }}">
+        <i class="bi {{ request()->routeIs('permohonan.step*') ? 'bi-feather' : 'bi-pencil-square' }}"></i>
+        <span>Form</span>
+    </a>
+    <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama') ? 'active':'' }}">
+        <i class="bi {{ request()->routeIs('permohonan.lama') ? 'bi-collection-fill' : 'bi-collection' }}"></i>
+        <span>Arsip</span>
+    </a>
+    <a href="{{ route('permohonan.rekap') }}" class="{{ request()->routeIs('permohonan.rekap') ? 'active':'' }}">
+        <i class="bi {{ request()->routeIs('permohonan.rekap') ? 'bi-bar-chart-fill' : 'bi-bar-chart' }}"></i>
+        <span>Rekap</span>
+    </a>
+    <a href="{{ route('landing') }}">
+        <i class="bi bi-globe2"></i>
+        <span>Beranda</span>
+    </a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const ov=document.getElementById('sidebarOverlay');
+  const isOpen=sb.classList.contains('mobile-open');
+  if(isOpen) closeSidebar(); else openSidebar();
+  if(navigator.vibrate) try{navigator.vibrate(8)}catch(e){}
+}
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('mobile-open');
+  document.getElementById('sidebarOverlay').classList.add('show');
+  document.body.style.overflow='hidden';
+  document.documentElement.style.overflow='hidden';
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+  document.body.style.overflow='';
+  document.documentElement.style.overflow='';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSidebar(); });
+// Tutup saat klik link di sidebar (mobile)
+document.querySelectorAll('.sidebar .menu a').forEach(a=>{
+  a.addEventListener('click', ()=>{ if(window.innerWidth<=991) setTimeout(closeSidebar, 180); });
+});
+// Swipe to close
+let touchStartX=0;
+const sbEl=document.getElementById('sidebar');
+sbEl.addEventListener('touchstart', e=>{ touchStartX=e.touches[0].clientX; }, {passive:true});
+sbEl.addEventListener('touchmove', e=>{
+  if(!sbEl.classList.contains('mobile-open')) return;
+  const dx=e.touches[0].clientX - touchStartX;
+  if(dx < -60) closeSidebar();
+}, {passive:true});
+// Chevron rotasi saat collapse (opsional)
+const permohonanMenu=document.getElementById('permohonanMenu');
+const ch=document.getElementById('permohonanChevron');
+if(permohonanMenu && ch){
+  new MutationObserver(()=>{
+    const isShown=permohonanMenu.classList.contains('show');
+    ch.style.transform=isShown?'rotate(0deg)':'rotate(-90deg)';
+  }).observe(permohonanMenu, {attributes:true});
+}
+// ── RIPPLE untuk btn & sidebar ──
+document.querySelectorAll('.btn-green,.btn-yellow,.sidebar .menu a,.topbar .btn').forEach(btn=>{
+  btn.style.position='relative'; btn.style.overflow='hidden';
+  btn.addEventListener('click', function(e){
+    const rect=this.getBoundingClientRect(); const size=Math.max(rect.width, rect.height)*1.15;
+    const x=e.clientX - rect.left - size/2; const y=e.clientY - rect.top - size/2;
+    const span=document.createElement('span'); span.className='ripple'; span.style.width=span.style.height=size+'px'; span.style.left=x+'px'; span.style.top=y+'px';
+    this.appendChild(span); setTimeout(()=> span.remove(), 550);
+  });
+});
+// ── TOAST helper ──
+function showToast(msg, type='success'){
+  const wrap=document.getElementById('toastWrap'); if(!wrap) return;
+  const el=document.createElement('div'); el.className='toast-item '+(type==='error'?'error':'success');
+  el.innerHTML=(type==='error'?'<i class="bi bi-x-circle-fill"></i>':'<i class="bi bi-check-circle-fill" style="color:#d4af37"></i>')+'<span>'+msg+'</span>';
+  wrap.appendChild(el); setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateX(20px)'; setTimeout(()=> el.remove(), 300); }, 3200);
+  if(navigator.vibrate) try{navigator.vibrate(type==='error'?[20,30,20]:10)}catch(_){}
+}
+window.showToast=showToast;
+// auto toast dari session success (jika ada)
+document.addEventListener('DOMContentLoaded', ()=>{
+  const alertEl=document.querySelector('.alert'); if(alertEl && alertEl.textContent.trim()){ showToast(alertEl.textContent.trim().slice(0,120)); }
+});
+// ── SIDEBAR LIVE SEARCH ( / atau CmdK ) ──
+const sInput=document.getElementById('sidebarSearch');
+if(sInput){
+  sInput.addEventListener('input', ()=>{
+    const q=sInput.value.toLowerCase().trim();
+    document.querySelectorAll('.sidebar .menu a').forEach(a=>{
+      const txt=a.textContent.toLowerCase();
+      a.classList.toggle('hidden-search', q && !txt.includes(q));
+    });
+    if(q) showToast('Filter: "'+q+'"','success');
+  });
+  document.addEventListener('keydown', e=>{
+    if((e.key==='/' && !e.ctrlKey && document.activeElement.tagName!=='INPUT' && document.activeElement.tagName!=='TEXTAREA') || (e.key==='k' && (e.ctrlKey||e.metaKey))){
+      e.preventDefault(); sInput.focus(); if(window.innerWidth<=991) openSidebar();
+    }
+  });
+}
+// ── LIVE TABLE SEARCH (permohonan) ──
+const liveSearch=document.querySelector('input[name="search"]');
+if(liveSearch){
+  let t;
+  liveSearch.addEventListener('input', ()=>{
+    clearTimeout(t); t=setTimeout(()=>{
+      const q=liveSearch.value.toLowerCase();
+      document.querySelectorAll('.table tbody tr, .d-md-none .rounded-3').forEach(row=>{
+        if(!q) row.style.display=''; else row.style.display=row.textContent.toLowerCase().includes(q)?'':'none';
+      });
+      if(q) showToast('Cari: '+q);
+    }, 280);
+  });
+}
+// ── WIZARD AUTO-SAVE & LIVE VALIDATION ──
+const wizardForm=document.querySelector('.card-form form');
+if(wizardForm){
+  const stepMatch=location.pathname.match(/step-(\d)/); const stepKey=stepMatch? 'wizard_step_'+stepMatch[1] : 'wizard_form';
+  // restore
+  try{
+    const saved=JSON.parse(localStorage.getItem(stepKey)||'{}');
+    if(Object.keys(saved).length){
+      Object.entries(saved).forEach(([k,v])=>{ const el=wizardForm.querySelector('[name="'+k+'"]'); if(el && !el.value) el.value=v; });
+      const hint=document.createElement('div'); hint.className='auto-save-hint mt-2'; hint.innerHTML='<i class="bi bi-cloud-arrow-down" style="color:var(--green)"></i> Data tersimpan dipulihkan — <a href="#" onclick="localStorage.removeItem(\''+stepKey+'\');this.parentElement.remove();return false" style="color:var(--gold2);font-weight:700">Hapus</a>';
+      wizardForm.querySelector('.p-4')?.prepend(hint);
+      showToast('Data sebelumnya dipulihkan');
+    }
+  }catch(_){}
+  // save on input
+  let saveT;
+  wizardForm.addEventListener('input', ()=>{
+    clearTimeout(saveT); saveT=setTimeout(()=>{
+      const data={}; new FormData(wizardForm).forEach((v,k)=>{ if(k!=='_token' && k!=='_method') data[k]=v; });
+      localStorage.setItem(stepKey, JSON.stringify(data));
+      const h=wizardForm.querySelector('.auto-save-hint'); if(h) h.innerHTML='<i class="bi bi-cloud-check" style="color:#22c55e"></i> Tersimpan otomatis '+new Date().toLocaleTimeString('id-ID');
+    }, 500);
+  });
+  // clear on submit
+  wizardForm.addEventListener('submit', ()=> localStorage.removeItem(stepKey));
+  // live validation
+  wizardForm.querySelectorAll('.form-control, .form-select').forEach(el=>{
+    el.addEventListener('blur', ()=>{
+      if(el.hasAttribute('required') || el.classList.contains('required')){
+        if(!el.value.trim()){ el.classList.add('shake'); setTimeout(()=> el.classList.remove('shake'), 350); el.style.borderColor='#dc3545'; showToast('Isi dulu: '+ (el.previousElementSibling?.textContent||el.name), 'error'); }
+        else { el.style.borderColor='#d4af37'; }
+      }
+    });
+    el.addEventListener('input', ()=>{ if(el.value.trim()) el.style.borderColor='#d4af37'; });
+  });
+  // progress hint
+  const totalFields=wizardForm.querySelectorAll('.form-control, .form-select').length;
+  const updateProgress=()=>{
+    const filled=[...wizardForm.querySelectorAll('.form-control, .form-select')].filter(e=> e.value.trim()).length;
+    const pct=Math.round(filled/totalFields*100);
+    let bar=document.getElementById('wizardProgress');
+    if(!bar){ bar=document.createElement('div'); bar.id='wizardProgress'; bar.style.cssText='height:3px;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:10px;transition:width .4s;margin-bottom:12px'; wizardForm.querySelector('.p-4')?.prepend(bar); }
+    bar.style.width=pct+'%';
+  };
+  wizardForm.addEventListener('input', updateProgress); updateProgress();
+}
+</script>
+@stack('scripts')
+</body>
+</html>
