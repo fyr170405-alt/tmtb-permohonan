@@ -144,13 +144,16 @@
             @if(in_array(auth()->user()->role ?? '', ['admin','pjgt']))
             <a href="{{ route('permohonan.step1') }}" class="{{ request()->routeIs('permohonan.step*') ? 'active':'' }} submenu"><i class="bi bi-feather"></i> Form Permohonan</a>
             @endif
-            <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama','permohonan.show','permohonan.edit') ? 'active':'' }} submenu"><i class="bi bi-collection-fill"></i> Arsip Permohonan</a>
-            <a href="{{ route('permohonan.rekap') }}" class="{{ request()->routeIs('permohonan.rekap') ? 'active':'' }} submenu"><i class="bi bi-bar-chart-fill"></i> Rekap</a>
+            <a href="{{ route('permohonan.lama', ['status' => 'Proses']) }}" class="{{ request()->routeIs('permohonan.lama') && request('status')==='Proses' ? 'active':'' }} submenu"><i class="bi bi-inbox-fill"></i> Permohonan Baru</a>
+            <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama','permohonan.show','permohonan.edit') && request('status')!=='Proses' ? 'active':'' }} submenu"><i class="bi bi-database-fill"></i> Data Permohonan</a>
+            <a href="{{ route('form.ijin') }}" class="{{ request()->routeIs('form.ijin*') ? 'active':'' }} submenu"><i class="bi bi-file-earmark-check-fill"></i> Form Ijin GT</a>
+            @if((auth()->user()->role ?? '')==='admin')
+            <a href="{{ route('form-questions.index') }}" class="{{ request()->routeIs('form-questions*') ? 'active':'' }} submenu"><i class="bi bi-patch-question-fill"></i> Kelola Pertanyaan</a>
+            @endif
         </div>
         @if((auth()->user()->role ?? '')==='admin')
         <div class="px-4 mt-3 mb-1 small fw-bold" style="color:rgba(212,175,55,.7);font-size:10px;letter-spacing:1.5px">ADMIN</div>
         <a href="{{ route('landing-contents.index') }}" class="{{ request()->routeIs('landing-contents*') ? 'active':'' }}"><i class="bi bi-pencil-square"></i> Kelola Landing</a>
-        <a href="{{ route('form-questions.index') }}" class="{{ request()->routeIs('form-questions*') ? 'active':'' }}"><i class="bi bi-patch-question-fill"></i> Kelola Pertanyaan</a>
         <div class="px-4 mt-3 mb-1 small fw-bold" style="color:rgba(253,246,227,.4);font-size:10px;letter-spacing:1.5px">SEGERA HADIR</div>
         <a href="#" style="opacity:.55"><i class="bi bi-megaphone-fill"></i> Laporan <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
         <a href="#" style="opacity:.55"><i class="bi bi-calendar-event"></i> Rapat <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>

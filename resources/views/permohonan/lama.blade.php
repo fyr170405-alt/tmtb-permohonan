@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title','Arsip Permohonan • TMTB & DAI')
-@section('breadcrumb','Permohonan Lama')
+@section('breadcrumb','Arsip Permohonan')
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded-3 gap-2" style="background:linear-gradient(135deg,#0a3d1f 0%, #0f5a2e 100%);color:#fdf6e3;border:2px solid #d4af37;flex-wrap:wrap">
     <div style="min-width:0">
@@ -98,21 +98,15 @@
                     <td><span class="badge" style="background:{{$p->rapot=='A'?'#0a3d1f':($p->rapot=='B'?'#d4af37':'#8a7a3a')}};color:{{$p->rapot=='A'?'#d4af37':'#fff'}};border:1px solid #0a3d1f">{{ $p->rapot }}</span></td>
                 </tr>
                 @empty
-                    @if(count($dummy))
-                        @foreach($dummy as $d)
-                        <tr>
-                            <td><button class="btn btn-sm" style="background:#fdf6e3;border:1px solid #d4af37"><i class="bi bi-eye"></i></button> <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button></td>
-                            <td><span class="badge-pendaftaran">{{ $d['id'] }}</span></td>
-                            <td style="color:#0a3d1f">{{ $d['nama'] }}</td>
-                            <td><span class="badge" style="background:#fdf6e3;color:#0a3d1f;border:1px solid #d4af37">{{ $d['madrasah'] }}</span></td>
-                            <td class="small" style="color:#5d4037">{{ $d['alamat'] }}</td>
-                            <td><span class="badge" style="background:#0a3d1f;color:#d4af37">T-4</span></td><td>1448/1449</td><td><span class="badge bg-danger">{{ $d['status'] }}</span></td><td>{{ $d['butuh'] }}</td><td>{{ $d['rapot'] }}</td>
-                        </tr>
-                        @endforeach
-                        <tr><td colspan="10" class="text-center py-2 small" style="background:#fdf6e3;color:#8a7a3a;border-top:2px solid #d4af37">◆ Data di atas adalah contoh — data asli akan tampil setelah mengisi formulir pendaftaran ◆</td></tr>
-                    @else
-                        <tr><td colspan="10" class="text-center py-4" style="color:#8a7a3a">Tidak ada data untuk filter ini — <span class="arab" style="color:#d4af37">لا يوجد</span> <a href="{{ route('permohonan.lama') }}" style="color:#0a3d1f;font-weight:700">Reset filter</a></td></tr>
-                    @endif
+                    <tr>
+                        <td colspan="10" class="text-center py-4" style="color:#8a7a3a">
+                            Tidak ada data untuk filter ini — <span class="arab" style="color:#d4af37">لا يوجد</span><br>
+                            <a href="{{ route('permohonan.lama') }}" class="btn btn-sm mt-2" style="background:var(--cream2);border:1px solid #d4af37;color:#0a3d1f;border-radius:20px">Reset filter</a>
+                            @if(in_array(auth()->user()->role ?? '', ['admin','pjgt']))
+                            <a href="{{ route('permohonan.step1') }}" class="btn btn-sm mt-2" style="background:#0a3d1f;color:#d4af37;border:1px solid #d4af37;border-radius:20px;font-weight:700">Buat Permohonan Baru</a>
+                            @endif
+                        </td>
+                    </tr>
                 @endforelse
             </tbody>
         </table>
@@ -145,22 +139,14 @@
             </div>
         </div>
         @empty
-            @if(count($dummy))
-                @foreach($dummy as $d)
-                <div class="p-3 mb-2 rounded-3" style="background:#fff;border:1.5px solid #e8d9a0;border-left:4px solid #dc3545">
-                    <div class="d-flex justify-content-between"><span class="badge-pendaftaran">{{ $d['id'] }}</span><span class="badge bg-danger" style="font-size:10px">{{ $d['status'] }}</span></div>
-                    <div class="fw-bold mt-2" style="color:var(--green)">{{ $d['nama'] }}</div>
-                    <div class="small" style="color:#5d4037">{{ $d['madrasah'] }} • {{ $d['alamat'] }}</div>
-                    <div class="small mt-1" style="color:#8a7a3a">Butuh: {{ $d['butuh'] }} • Rapot: {{ $d['rapot'] }}</div>
-                </div>
-                @endforeach
-                <div class="text-center py-2 small" style="background:#fdf6e3;color:#8a7a3a;border:1.5px dashed #d4af37;border-radius:10px">◆ Contoh data — isi formulir untuk data asli ◆</div>
-            @else
-                <div class="text-center py-4 rounded-3" style="background:#fdf6e3;border:1.5px dashed #d4af37;color:#8a7a3a">
-                    <div style="width:48px;height:48px;background:#fff;border:2px solid var(--gold);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;color:var(--gold2)"><i class="bi bi-inbox"></i></div>
-                    Tidak ada data untuk filter ini<br><a href="{{ route('permohonan.lama') }}" class="btn btn-sm mt-2" style="background:var(--green);color:var(--gold);border:1px solid var(--gold);border-radius:20px">Reset filter</a>
-                </div>
-            @endif
+            <div class="text-center py-4 rounded-3" style="background:#fdf6e3;border:1.5px dashed #d4af37;color:#8a7a3a">
+                <div style="width:48px;height:48px;background:#fff;border:2px solid var(--gold);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;color:var(--gold2)"><i class="bi bi-inbox"></i></div>
+                Tidak ada data untuk filter ini<br>
+                <a href="{{ route('permohonan.lama') }}" class="btn btn-sm mt-2" style="background:var(--green);color:var(--gold);border:1px solid var(--gold);border-radius:20px">Reset filter</a>
+                @if(in_array(auth()->user()->role ?? '', ['admin','pjgt']))
+                <a href="{{ route('permohonan.step1') }}" class="btn btn-sm mt-2" style="background:var(--gold);color:var(--green);border:1px solid var(--green);border-radius:20px;font-weight:700">Buat Baru</a>
+                @endif
+            </div>
         @endforelse
     </div>
     @if($permohonans instanceof \Illuminate\Pagination\LengthAwarePaginator)

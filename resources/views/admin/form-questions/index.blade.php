@@ -10,9 +10,9 @@
   <a href="{{ route('form-questions.create') }}" class="btn-green"><i class="bi bi-plus-circle"></i> Tambah Pertanyaan</a>
 </div>
 
-@for($s=1;$s<=4;$s++)
+@for($s=1;$s<=5;$s++)
 <div class="card-form mb-3">
-  <div class="card-form-header"><i class="bi bi-list-ol" style="color:var(--gold)"></i> Step {{ $s }} — {{ ['','Identitas','Pengelola','Madrasah','Murid'][$s] }} ({{ $questions->where('step',$s)->count() }})</div>
+  <div class="card-form-header"><i class="bi bi-list-ol" style="color:var(--gold)"></i> {{ $s<=4 ? 'Step '.$s.' — '.['','Identitas','Pengelola','Madrasah','Murid'][$s] : 'Form Ijin GT' }} ({{ $questions->where('step',$s)->count() }})</div>
   <div class="table-responsive">
     <table class="table table-hover mb-0 small">
       <thead style="background:var(--cream2);color:var(--green)"><tr><th>Urut</th><th>Pertanyaan</th><th>Tipe</th><th>Wajib</th><th>Aktif</th><th>Aksi</th></tr></thead>

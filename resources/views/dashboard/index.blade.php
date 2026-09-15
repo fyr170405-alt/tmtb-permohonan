@@ -211,36 +211,6 @@
   </div>
 </div>
 
-{{-- 5. Rekap & Export + Info Lain --}}
-<div class="row g-2 g-md-3 mb-3">
-  <div class="col-12 col-lg-8">
-    <div class="card" style="border:2px solid var(--gold);border-radius:16px;background:linear-gradient(135deg,#fff 0%, var(--cream) 100%)">
-      <div class="card-body p-3">
-        <h6 class="fw-bold" style="color:var(--green)"><i class="bi bi-download" style="color:var(--gold)"></i> Rekap & Export</h6>
-        <p class="small" style="color:#5d4037">Filter dan unduh data permohonan. Tersedia di halaman Rekap lengkap.</p>
-        <form method="GET" action="{{ route('permohonan.rekap') }}" class="row g-2">
-          <div class="col-6 col-md-3"><select name="status" class="form-select form-select-sm"><option value="">Semua Status</option><option>Proses</option><option>Diterima</option><option>Ditolak</option></select></div>
-          <div class="col-6 col-md-3"><select name="rapot" class="form-select form-select-sm"><option value="">Semua Rapot</option><option>A</option><option>B</option><option>C</option></select></div>
-          <div class="col-12 col-md-6 d-flex gap-2"><button class="btn-green btn-sm flex-fill" style="min-height:36px"><i class="bi bi-search"></i> Filter</button><a href="{{ route('permohonan.export') }}" class="btn-yellow btn-sm flex-fill" style="min-height:36px"><i class="bi bi-file-earmark-excel"></i> Export</a></div>
-        </form>
-      </div>
-    </div>
-  </div>
-  <div class="col-12 col-lg-4">
-    <div class="card h-100" style="border:2px solid var(--gold);border-radius:16px;background:#fff;">
-      <div class="card-body p-3">
-        <h6 class="fw-bold" style="color:var(--green);font-size:13px"><i class="bi bi-info-circle-fill" style="color:var(--gold)"></i> Info Lain</h6>
-        <div class="d-grid gap-2 small">
-          <a href="#" class="d-flex align-items-center gap-2 p-2 rounded-3 text-decoration-none" style="background:var(--cream);border:1px solid var(--gold);color:var(--green)"><i class="bi bi-megaphone-fill" style="color:var(--gold)"></i> Laporan <span class="ms-auto badge bg-warning text-dark" style="font-size:9px">soon</span></a>
-          <a href="#" class="d-flex align-items-center gap-2 p-2 rounded-3 text-decoration-none" style="background:var(--cream);border:1px solid var(--gold);color:var(--green)"><i class="bi bi-calendar-event" style="color:var(--gold)"></i> Rapat <span class="ms-auto badge bg-warning text-dark" style="font-size:9px">soon</span></a>
-          <a href="#" class="d-flex align-items-center gap-2 p-2 rounded-3 text-decoration-none" style="background:var(--cream);border:1px solid var(--gold);color:var(--green)"><i class="bi bi-mosque" style="color:var(--gold)"></i> Supervisi <span class="ms-auto badge bg-warning text-dark" style="font-size:9px">soon</span></a>
-          @if($isAdmin)<a href="{{ route('landing') }}" target="_blank" class="d-flex align-items-center gap-2 p-2 rounded-3 text-decoration-none" style="background:var(--green);color:var(--gold);border:1.5px solid var(--gold)"><i class="bi bi-pencil-square"></i> Kelola Landing Page <i class="bi bi-box-arrow-up-right ms-auto"></i></a>@endif
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>

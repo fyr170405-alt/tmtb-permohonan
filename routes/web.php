@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
     // Kelola Pertanyaan Form - admin only
     Route::resource('form-questions', FormQuestionController::class)->except(['show'])->parameters(['form-questions'=>'formQuestion']);
 
-    // Legacy routes biar sidebar lama tetap jalan
-    Route::redirect('/form-ijin-gt', '/form-permohonan/step-1')->name('form.ijin');
+    // Form Ijin GT ringkas - halaman sendiri (admin & pjgt)
+    Route::get('/form-ijin-gt', [PermohonanController::class, 'ijinForm'])->name('form.ijin')->middleware('role:admin,pjgt');
+    Route::post('/form-ijin-gt', [PermohonanController::class, 'storeIjin'])->name('form.ijin.store')->middleware('role:admin,pjgt');
 });

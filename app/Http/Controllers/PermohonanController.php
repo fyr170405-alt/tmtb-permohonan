@@ -252,6 +252,48 @@ class PermohonanController extends Controller
         return redirect()->route('permohonan.lama');
     }
 
+    // FORM IJIN GT RINGKAS - 1 halaman (nama, madrasah, telepon, butuh GT, tanggal, keterangan + pertanyaan custom step 5)
+    public function ijinForm()
+    {
+        $customQuestions = $this->customQuestions(5);
+        $extraData = [];
+        return view('permohonan.ijin', compact('customQuestions', 'extraData'));
+    }
+
+    public function storeIjin(Request $request)
+    {
+        $validated = $request->validate(array_merge([
+            'pjgt_nama' => 'required|string|min:3|max:100',
+            'nama_madrasah' => 'required|string|max:255',
+            'telepon' => 'required|string|min:9|max:20',
+            'butuh_gt' => 'required|integer|min:1|max:10',
+            'tanggal_ijin' => 'required|date',
+            'keterangan' => 'nullable|string|max:500',
+        ], $this->customRules(5)));
+
+        $maxId = Permohonan::max(\DB::raw('CAST(pjgt_id AS UNSIGNED)'));
+        $next = $maxId ? $maxId + 1 : 196;
+        if ($next < 195) $next = 195;
+        $pjgtId = str_pad($next, 5, '0', STR_PAD_LEFT);
+
+        Permohonan::create([
+            'pjgt_id' => $pjgtId,
+            'pjgt_nama' => $validated['pjgt_nama'],
+            'pjgt' => $validated['pjgt_nama'],
+            'nama_madrasah' => $validated['nama_madrasah'],
+            'telepon' => $validated['telepon'],
+            'butuh_gt' => $validated['butuh_gt'],
+            'wil' => 'T-4',
+            'tahun' => '1448/1449',
+            'status' => 'Proses',
+            'rapot' => 'A',
+            'username' => auth()->user()->username ?? '00007',
+            'extra_answers' => array_merge(['tanggal_ijin' => $validated['tanggal_ijin'], 'keterangan' => $validated['keterangan'] ?? null, 'via' => 'form-ijin-gt'], $validated['extra'] ?? []),
+        ]);
+
+        return redirect()->route('permohonan.lama')->with('success', 'Ijin GT berhasil disimpan dengan ID PJGT ' . $pjgtId);
+    }
+
     // Halaman Permohonan Lama (halaman 5 PDF) - tabel list heritage
     public function lama(Request $request)
     {

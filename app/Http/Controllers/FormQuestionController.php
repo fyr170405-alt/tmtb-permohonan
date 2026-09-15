@@ -12,7 +12,7 @@ class FormQuestionController extends Controller
 
     private function rules(){
         return [
-            'step'=>'required|integer|min:1|max:4',
+            'step'=>'required|integer|min:1|max:5',
             'label'=>'required|string|max:255',
             'field_type'=>'required|in:text,number,textarea,select,date',
             'options'=>'nullable|string|max:1000',

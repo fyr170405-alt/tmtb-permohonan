@@ -14,6 +14,7 @@
           <option value="2" @selected(old('step',$question->step)==2)>2 - Pengelola</option>
           <option value="3" @selected(old('step',$question->step)==3)>3 - Madrasah</option>
           <option value="4" @selected(old('step',$question->step)==4)>4 - Murid</option>
+          <option value="5" @selected(old('step',$question->step)==5)>5 - Form Ijin GT</option>
         </select>
       </div>
       <div class="col-md-6">

@@ -13,6 +13,9 @@
         <div class="small" style="color:var(--gold)">Username Anda</div>
         <span class="username-badge" style="background:#fdf6e3;color:#0a3d1f;border-color:#d4af37">{{ auth()->user()->username ?? '00007' }} • {{ strtoupper(auth()->user()->role ?? 'PJGT') }}</span>
         <div class="arab small mt-1" style="color:#d4af37">بارك الله</div>
+        @if((auth()->user()->role ?? '')==='admin')
+        <a href="{{ route('form-questions.index') }}" class="btn btn-sm mt-2" style="background:rgba(212,175,55,.15);border:1.5px solid #d4af37;color:#d4af37;border-radius:20px;font-size:11px;font-weight:700"><i class="bi bi-gear-fill"></i> Kelola Pertanyaan</a>
+        @endif
     </div>
 </div>
 
