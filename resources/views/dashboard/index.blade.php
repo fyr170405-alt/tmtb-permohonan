@@ -167,16 +167,16 @@
 {{-- 3. Charts --}}
 <div class="row g-2 g-md-3 mb-3">
   <div class="col-12 col-md-6 col-lg-3">
-    <div class="card" style="border:2px solid var(--gold);border-radius:16px"><div class="card-body p-3"><h6 class="fw-bold" style="color:var(--green);font-size:13px"><i class="bi bi-pie-chart-fill" style="color:var(--gold)"></i> Status</h6><canvas id="dashStatus" height="160"></canvas></div></div>
+    <div class="card" style="border:2px solid var(--gold);border-radius:16px"><div class="card-body p-3"><h6 class="fw-bold mb-2" style="color:var(--green);font-size:13px"><i class="bi bi-pie-chart-fill" style="color:var(--gold)"></i> Status</h6><div style="height:180px;position:relative"><canvas id="dashStatus"></canvas></div></div></div>
   </div>
   <div class="col-12 col-md-6 col-lg-3">
-    <div class="card" style="border:2px solid var(--gold);border-radius:16px"><div class="card-body p-3"><h6 class="fw-bold" style="color:var(--green);font-size:13px"><i class="bi bi-award-fill" style="color:var(--gold)"></i> Rapot</h6><canvas id="dashRapot" height="160"></canvas></div></div>
+    <div class="card" style="border:2px solid var(--gold);border-radius:16px"><div class="card-body p-3"><h6 class="fw-bold mb-2" style="color:var(--green);font-size:13px"><i class="bi bi-award-fill" style="color:var(--gold)"></i> Rapot</h6><div style="height:180px;position:relative"><canvas id="dashRapot"></canvas></div></div></div>
   </div>
   <div class="col-12 col-md-6 col-lg-3">
-    <div class="card" style="border:2px solid var(--gold);border-radius:16px"><div class="card-body p-3"><h6 class="fw-bold" style="color:var(--green);font-size:13px"><i class="bi bi-geo-alt-fill" style="color:var(--gold)"></i> Wilayah</h6><canvas id="dashWil" height="160"></canvas></div></div>
+    <div class="card" style="border:2px solid var(--gold);border-radius:16px"><div class="card-body p-3"><h6 class="fw-bold mb-2" style="color:var(--green);font-size:13px"><i class="bi bi-geo-alt-fill" style="color:var(--gold)"></i> Wilayah</h6><div style="height:180px;position:relative"><canvas id="dashWil"></canvas></div></div></div>
   </div>
   <div class="col-12 col-md-6 col-lg-3">
-    <div class="card" style="border:2px solid var(--gold);border-radius:16px"><div class="card-body p-3"><h6 class="fw-bold" style="color:var(--green);font-size:13px"><i class="bi bi-map-fill" style="color:var(--gold)"></i> Top Provinsi</h6><canvas id="dashProv" height="160"></canvas></div></div>
+    <div class="card" style="border:2px solid var(--gold);border-radius:16px"><div class="card-body p-3"><h6 class="fw-bold mb-2" style="color:var(--green);font-size:13px"><i class="bi bi-map-fill" style="color:var(--gold)"></i> Top Provinsi</h6><div style="height:180px;position:relative"><canvas id="dashProv"></canvas></div></div></div>
   </div>
 </div>
 
