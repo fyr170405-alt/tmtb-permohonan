@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LandingContentController;
 use App\Http\Controllers\PermohonanController;
 use App\Models\Permohonan;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/permohonan/{permohonan}', [PermohonanController::class, 'destroy'])->name('permohonan.destroy')->middleware('role:admin');
     Route::get('/rekap-permohonan', [PermohonanController::class, 'rekap'])->name('permohonan.rekap');
     Route::get('/export-permohonan', [PermohonanController::class, 'export'])->name('permohonan.export');
+
+    // Kelola Landing Page - admin only
+    Route::resource('landing-contents', LandingContentController::class)->except(['show'])->parameters(['landing-contents'=>'landingContent']);
 
     // Legacy routes biar sidebar lama tetap jalan
     Route::redirect('/form-ijin-gt', '/form-permohonan/step-1')->name('form.ijin');

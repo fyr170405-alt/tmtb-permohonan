@@ -148,7 +148,8 @@
         </div>
         <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama') ? 'active':'' }}"><i class="bi bi-journals"></i> Data Permohonan</a>
         @if((auth()->user()->role ?? '')==='admin')
-        <a href="{{ route('permohonan.rekap') }}"><i class="bi bi-graph-up"></i> Rekap</a>
+        <a href="{{ route('permohonan.rekap') }}" class="{{ request()->routeIs('permohonan.rekap') ? 'active':'' }}"><i class="bi bi-graph-up"></i> Rekap</a>
+        <a href="{{ route('landing-contents.index') }}" class="{{ request()->routeIs('landing-contents*') ? 'active':'' }}"><i class="bi bi-pencil-square"></i> Kelola Landing</a>
         <a href="#"><i class="bi bi-megaphone-fill"></i> Laporan <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
         <a href="#"><i class="bi bi-calendar-event"></i> Rapat <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
         <a href="#"><i class="bi bi-mosque"></i> Supervisi <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
