@@ -83,6 +83,8 @@
                 </div>
             </div>
         </div>
+            @include('permohonan._custom_fields')
+        </div>
         <div class="p-3 border-top d-flex justify-content-between align-items-center" style="background:linear-gradient(135deg,#fdf6e3 0%, #fdf0c7 100%);border-top:2px solid #d4af37">
             <span class="arab small" style="color:#0a3d1f">العلم نور — langkah ١ dari ٤</span>
             <button type="submit" class="btn-green">Selanjutnya <i class="bi bi-arrow-right"></i> • Tahap ٢</button>

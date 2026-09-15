@@ -37,6 +37,7 @@
                 </div>
             </div>
             @endforeach
+            @include('permohonan._custom_fields')
         </div>
         <div class="p-3 border-top d-flex justify-content-between align-items-center" style="background:linear-gradient(135deg,#fdf6e3 0%, #fdf0c7 100%);border-top:2px solid #d4af37">
             <a href="{{ route('permohonan.step1') }}" class="btn-yellow"><i class="bi bi-arrow-left"></i> Tahap ١</a>

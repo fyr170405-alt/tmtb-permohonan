@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FormQuestionController;
 use App\Http\Controllers\LandingContentController;
 use App\Http\Controllers\PermohonanController;
 use App\Models\Permohonan;
@@ -50,6 +51,8 @@ Route::middleware('auth')->group(function () {
 
     // Kelola Landing Page - admin only
     Route::resource('landing-contents', LandingContentController::class)->except(['show'])->parameters(['landing-contents'=>'landingContent']);
+    // Kelola Pertanyaan Form - admin only
+    Route::resource('form-questions', FormQuestionController::class)->except(['show'])->parameters(['form-questions'=>'formQuestion']);
 
     // Legacy routes biar sidebar lama tetap jalan
     Route::redirect('/form-ijin-gt', '/form-permohonan/step-1')->name('form.ijin');

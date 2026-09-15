@@ -34,6 +34,14 @@
           <div class="small fw-bold" style="color:#0a3d1f">Jumlah Santri</div>
           <div class="small" style="color:#5d4037">Sifir {{ $permohonan->sifir_putra }}/{{ $permohonan->sifir_putri }} • Ibtidaiyah 1 {{ $permohonan->ibtidaiyah_1_putra }}/{{ $permohonan->ibtidaiyah_1_putri }} • Tsanawiyah 3 {{ $permohonan->tsanawiyah_3_putra }}/{{ $permohonan->tsanawiyah_3_putri }} • Mukim {{ $permohonan->mukim_putra }}/{{ $permohonan->mukim_putri }}</div>
         </div>
+        @if($permohonan->extra_answers)
+        <div class="mt-3 p-3 rounded" style="background:#fffdf0;border:2px dashed #d4af37">
+          <div class="small fw-bold mb-2" style="color:#0a3d1f"><i class="bi bi-patch-question-fill" style="color:#d4af37"></i> Jawaban Tambahan</div>
+          @foreach($permohonan->extra_answers as $k=>$v)
+          <div class="d-flex justify-content-between border-bottom py-1 small" style="border-color:#e8d9a0"><span style="color:#8a7a3a">{{ str_replace('custom_','',str_replace('_',' ',$k)) }}</span><strong style="color:#0a3d1f">{{ $v }}</strong></div>
+          @endforeach
+        </div>
+        @endif
         @if($permohonan->dokumen_path)
         <div class="mt-3"><a href="{{ Storage::url($permohonan->dokumen_path) }}" target="_blank" class="btn btn-sm" style="background:#0a3d1f;color:#d4af37;border:1px solid #d4af37"><i class="bi bi-file-earmark-pdf"></i> Lihat Dokumen</a></div>
         @endif

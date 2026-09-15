@@ -136,6 +136,7 @@
     <div class="sidebar-search"><i class="bi bi-search"></i><input id="sidebarSearch" type="text" placeholder="Cari menu... ( / )" autocomplete="off"><span class="small" style="color:rgba(253,246,227,0.5);padding-right:8px;font-size:10px">⌘K</span></div>
     <div class="menu mt-2">
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard*') ? 'active':'' }}"><i class="bi bi-house-door-fill"></i> Dashboard</a>
+        <div class="px-4 mt-3 mb-1 small fw-bold" style="color:rgba(212,175,55,.7);font-size:10px;letter-spacing:1.5px">PERMOHONAN</div>
         <a href="#" data-bs-toggle="collapse" data-bs-target="#permohonanMenu" style="justify-content:space-between;" onclick="event.preventDefault(); document.getElementById('permohonanMenu').classList.toggle('show')">
             <span><i class="bi bi-journal-bookmark-fill"></i> Permohonan</span> <i class="bi bi-chevron-down" style="font-size:10px;transition:.2s" id="permohonanChevron"></i>
         </a>
@@ -143,16 +144,17 @@
             @if(in_array(auth()->user()->role ?? '', ['admin','pjgt']))
             <a href="{{ route('permohonan.step1') }}" class="{{ request()->routeIs('permohonan.step*') ? 'active':'' }} submenu"><i class="bi bi-feather"></i> Form Permohonan</a>
             @endif
-            <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama') ? 'active':'' }} submenu"><i class="bi bi-collection-fill"></i> Permohonan Lama</a>
+            <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama','permohonan.show','permohonan.edit') ? 'active':'' }} submenu"><i class="bi bi-collection-fill"></i> Arsip Permohonan</a>
             <a href="{{ route('permohonan.rekap') }}" class="{{ request()->routeIs('permohonan.rekap') ? 'active':'' }} submenu"><i class="bi bi-bar-chart-fill"></i> Rekap</a>
         </div>
-        <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama') ? 'active':'' }}"><i class="bi bi-journals"></i> Data Permohonan</a>
         @if((auth()->user()->role ?? '')==='admin')
-        <a href="{{ route('permohonan.rekap') }}" class="{{ request()->routeIs('permohonan.rekap') ? 'active':'' }}"><i class="bi bi-graph-up"></i> Rekap</a>
+        <div class="px-4 mt-3 mb-1 small fw-bold" style="color:rgba(212,175,55,.7);font-size:10px;letter-spacing:1.5px">ADMIN</div>
         <a href="{{ route('landing-contents.index') }}" class="{{ request()->routeIs('landing-contents*') ? 'active':'' }}"><i class="bi bi-pencil-square"></i> Kelola Landing</a>
-        <a href="#"><i class="bi bi-megaphone-fill"></i> Laporan <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
-        <a href="#"><i class="bi bi-calendar-event"></i> Rapat <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
-        <a href="#"><i class="bi bi-mosque"></i> Supervisi <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
+        <a href="{{ route('form-questions.index') }}" class="{{ request()->routeIs('form-questions*') ? 'active':'' }}"><i class="bi bi-patch-question-fill"></i> Kelola Pertanyaan</a>
+        <div class="px-4 mt-3 mb-1 small fw-bold" style="color:rgba(253,246,227,.4);font-size:10px;letter-spacing:1.5px">SEGERA HADIR</div>
+        <a href="#" style="opacity:.55"><i class="bi bi-megaphone-fill"></i> Laporan <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
+        <a href="#" style="opacity:.55"><i class="bi bi-calendar-event"></i> Rapat <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
+        <a href="#" style="opacity:.55"><i class="bi bi-mosque"></i> Supervisi <span class="badge bg-warning text-dark ms-auto" style="font-size:8px">soon</span></a>
         @else
         <a href="#" style="opacity:0.7"><i class="bi bi-mortarboard"></i> Guru Tugas</a>
         @endif
@@ -223,12 +225,14 @@
         <i class="bi {{ request()->routeIs('dashboard*') ? 'bi-house-door-fill' : 'bi-house-door' }}"></i>
         <span>Home</span>
     </a>
+    @if(in_array(auth()->user()->role ?? '', ['admin','pjgt']))
     <a href="{{ route('permohonan.step1') }}" class="{{ request()->routeIs('permohonan.step*') ? 'active':'' }}">
         <i class="bi {{ request()->routeIs('permohonan.step*') ? 'bi-feather' : 'bi-pencil-square' }}"></i>
         <span>Form</span>
     </a>
-    <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama') ? 'active':'' }}">
-        <i class="bi {{ request()->routeIs('permohonan.lama') ? 'bi-collection-fill' : 'bi-collection' }}"></i>
+    @endif
+    <a href="{{ route('permohonan.lama') }}" class="{{ request()->routeIs('permohonan.lama','permohonan.show','permohonan.edit') ? 'active':'' }}">
+        <i class="bi {{ request()->routeIs('permohonan.lama','permohonan.show','permohonan.edit') ? 'bi-collection-fill' : 'bi-collection' }}"></i>
         <span>Arsip</span>
     </a>
     <a href="{{ route('permohonan.rekap') }}" class="{{ request()->routeIs('permohonan.rekap') ? 'active':'' }}">

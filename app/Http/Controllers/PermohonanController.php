@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FormQuestion;
 use App\Models\Permohonan;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,37 @@ class PermohonanController extends Controller
     private function saveData(array $data)
     {
         session(['permohonan_data' => array_merge($this->getData(), $data)]);
+    }
+
+    private function getExtra()
+    {
+        return session('permohonan_extra', []);
+    }
+
+    private function saveExtra(array $data)
+    {
+        session(['permohonan_extra' => array_merge($this->getExtra(), $data)]);
+    }
+
+    private function customQuestions(int $step)
+    {
+        return FormQuestion::where('step',$step)->where('is_active',true)->orderBy('sort_order')->orderBy('id')->get();
+    }
+
+    private function customRules(int $step): array
+    {
+        $rules = [];
+        foreach ($this->customQuestions($step) as $q) {
+            $key = 'extra.'.$q->field_name;
+            if ($q->is_required) {
+                $rules[$key] = 'required|string|max:2000';
+            } else {
+                $rules[$key] = 'nullable|string|max:2000';
+            }
+            if ($q->field_type === 'number') $rules[$key] .= '|numeric';
+            if ($q->field_type === 'date') $rules[$key] = ($q->is_required ? 'required' : 'nullable').'|date';
+        }
+        return $rules;
     }
 
     // STEP 1 : Identitas Madrasah (halaman 1 PDF)
@@ -37,12 +69,14 @@ class PermohonanController extends Controller
             'telepon' => $data['telepon'] ?? '085236680680',
             'email' => $data['email'] ?? 'kunuzulimam@gmail.com',
         ];
-        return view('permohonan.step1', compact('defaults', 'data'));
+        $customQuestions = $this->customQuestions(1);
+        $extraData = $this->getExtra();
+        return view('permohonan.step1', compact('defaults', 'data', 'customQuestions', 'extraData'));
     }
 
     public function storeStep1(Request $request)
     {
-        $validated = $request->validate([
+        $validated = $request->validate(array_merge([
             'nama_madrasah' => 'required|string|max:255',
             'nama_pesantren' => 'required|string|max:255',
             'negara' => 'required|string',
@@ -56,11 +90,14 @@ class PermohonanController extends Controller
             'rw' => 'required|string',
             'telepon' => 'required|string',
             'email' => 'required|email',
-        ], [
+        ], $this->customRules(1)), [
             'nama_pesantren.required' => 'Nama Pondok Pesantren wajib diisi (sesuai tutorial: jika tidak ada kasih 0 atau -)',
         ]);
 
+        $extra = $validated['extra'] ?? [];
+        unset($validated['extra']);
         $this->saveData($validated);
+        $this->saveExtra($extra);
         return redirect()->route('permohonan.step2');
     }
 
@@ -68,12 +105,14 @@ class PermohonanController extends Controller
     public function step2()
     {
         $data = $this->getData();
-        return view('permohonan.step2', compact('data'));
+        $customQuestions = $this->customQuestions(2);
+        $extraData = $this->getExtra();
+        return view('permohonan.step2', compact('data', 'customQuestions', 'extraData'));
     }
 
     public function storeStep2(Request $request)
     {
-        $validated = $request->validate([
+        $validated = $request->validate(array_merge([
             'pengasuh' => 'required|string|min:3|max:100',
             'pengasuh_hp' => 'required|string|regex:/^08[0-9]{8,13}$/',
             'ketua_yayasan' => 'required|string|min:3|max:100',
@@ -86,12 +125,15 @@ class PermohonanController extends Controller
             'tata_usaha_hp' => 'required|string|regex:/^08[0-9]{8,13}$/',
             'pjgt' => 'required|string|min:3|max:100',
             'pjgt_hp' => 'required|string|regex:/^08[0-9]{8,13}$/',
-        ], [
+        ], $this->customRules(2)), [
             'pengasuh.required' => 'Pengasuh wajib diisi (jika tidak ada isi 0)',
             'pengasuh_hp.regex' => 'No HP harus format 08... 10-15 digit',
         ]);
 
+        $extra = $validated['extra'] ?? [];
+        unset($validated['extra']);
         $this->saveData($validated);
+        $this->saveExtra($extra);
         return redirect()->route('permohonan.step3');
     }
 
@@ -104,12 +146,14 @@ class PermohonanController extends Controller
             'komunikasi_bahasa' => $data['komunikasi_bahasa'] ?? 'INDONESIA',
             'kbm_bahasa' => $data['kbm_bahasa'] ?? 'INDONESIA',
         ];
-        return view('permohonan.step3', compact('data', 'defaults'));
+        $customQuestions = $this->customQuestions(3);
+        $extraData = $this->getExtra();
+        return view('permohonan.step3', compact('data', 'defaults', 'customQuestions', 'extraData'));
     }
 
     public function storeStep3(Request $request)
     {
-        $validated = $request->validate([
+        $validated = $request->validate(array_merge([
             'situasi_madrasah' => 'required|string',
             'komunikasi_bahasa' => 'required|string',
             'komunikasi_lainnya' => 'nullable|string',
@@ -122,9 +166,12 @@ class PermohonanController extends Controller
             'kbm_lainnya' => 'nullable|string',
             'guru_laki' => 'required|string',
             'guru_perempuan' => 'required|string',
-        ]);
+        ], $this->customRules(3)));
 
+        $extra = $validated['extra'] ?? [];
+        unset($validated['extra']);
         $this->saveData($validated);
+        $this->saveExtra($extra);
         return redirect()->route('permohonan.step4');
     }
 
@@ -132,12 +179,14 @@ class PermohonanController extends Controller
     public function step4()
     {
         $data = $this->getData();
-        return view('permohonan.step4', compact('data'));
+        $customQuestions = $this->customQuestions(4);
+        $extraData = $this->getExtra();
+        return view('permohonan.step4', compact('data', 'customQuestions', 'extraData'));
     }
 
     public function storeStep4(Request $request)
     {
-        $validated = $request->validate([
+        $validated = $request->validate(array_merge([
             'sifir_putra' => 'nullable|integer|min:0',
             'sifir_putri' => 'nullable|integer|min:0',
             'ibtidaiyah_1_putra' => 'nullable|integer|min:0',
@@ -162,9 +211,12 @@ class PermohonanController extends Controller
             'mukim_putri' => 'nullable|integer|min:0',
             'tidak_mukim_putra' => 'nullable|integer|min:0',
             'tidak_mukim_putri' => 'nullable|integer|min:0',
-        ]);
+        ], $this->customRules(4)));
 
+        $extra4 = $validated['extra'] ?? [];
+        unset($validated['extra']);
         $this->saveData($validated);
+        $this->saveExtra($extra4);
 
         // Simpan ke DB dan redirect ke rekap / permohnan lama
         $all = $this->getData();
@@ -189,10 +241,12 @@ class PermohonanController extends Controller
             'butuh_gt' => 1,
             'rapot' => 'A',
             'username' => auth()->user()->username ?? '00007',
+            'extra_answers' => $this->getExtra() ?: null,
         ]));
 
         // clear session
         session()->forget('permohonan_data');
+        session()->forget('permohonan_extra');
         session()->flash('success', 'Permohonan berhasil disimpan dengan ID PJGT ' . $pjgtId);
 
         return redirect()->route('permohonan.lama');
@@ -226,17 +280,7 @@ class PermohonanController extends Controller
         }
         $permohonans = $query->paginate(15)->withQueryString();
 
-        // dummy data jika kosong, tampilkan contoh seperti di PDF agar mirip screenshot
-        $dummy = [];
-        if ($permohonans->isEmpty() && !$search && !$rapot && !$status) {
-            $dummy = [
-                ['id'=>'00195','nama'=>'TAUFIQUR ROHMAN','madrasah'=>'AL-MARZUQI','alamat'=>'Kerang - Sukosari - Kabupaten Bondowoso - JAWA TIMUR','status'=>'Ditolak','butuh'=>1,'rapot'=>'A'],
-                ['id'=>'00366','nama'=>'MUKHLAS','madrasah'=>'AL-HUDA','alamat'=>'Patemon - Tlogosari - Kabupaten Bondowoso - JAWA TIMUR','status'=>'Ditolak','butuh'=>1,'rapot'=>'B'],
-                ['id'=>'00369','nama'=>'AHMAD SYAMSUL MUQIT ZAINI','madrasah'=>'NURUL HIKMAH','alamat'=>'Lumutan - Botolinggo - Kabupaten Bondowoso - JAWA TIMUR','status'=>'Ditolak','butuh'=>2,'rapot'=>'A'],
-            ];
-        }
-
-        return view('permohonan.lama', compact('permohonans','dummy','search','rapot','status'));
+        return view('permohonan.lama', compact('permohonans','search','rapot','status'));
     }
 
     public function show(Permohonan $permohonan)
@@ -316,6 +360,12 @@ class PermohonanController extends Controller
         $rapot = $request->query('rapot');
         $status = $request->query('status');
         $query = Permohonan::query()->latest();
+        // Role filter samakan dengan halaman Arsip: pjgt milik sendiri, gt hanya Diterima
+        if (auth()->user()->role === 'pjgt') {
+            $query->where('username', auth()->user()->username);
+        } elseif (auth()->user()->role === 'gt') {
+            $query->where('status', 'Diterima');
+        }
         if ($search) {
             $query->where(function($q) use ($search){
                 $q->where('pjgt_nama','like',"%$search%")

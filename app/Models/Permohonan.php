@@ -15,6 +15,7 @@ class Permohonan extends Model
         'sifir_putra' => 'integer',
         'sifir_putri' => 'integer',
         'created_at' => 'datetime',
+        'extra_answers' => 'array',
     ];
 
     protected $fillable = [
